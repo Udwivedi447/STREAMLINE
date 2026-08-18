@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Streamline — Streaming Finance & Content Analytics 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#000000; --surface:#141414; --surface2:#1c1c1c; --border:#2b2b2b;
+  --red:#E50914; --red-dim:#8c0a10; --red-glow:rgba(229,9,20,0.35);
+  --gold:#E8B93B; --green:#3ECF6E;
+  --text:#FFFFFF; --text-dim:#B3B3B3; --text-faint:#6f6f6f;
+  --mono:'JetBrains Mono',monospace; --disp:'Archivo',sans-serif; --body:'Inter',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+.wrap{max-width:1320px;margin:0 auto;padding:0 28px;}
+
+/* ---------- Header ---------- */
+header{background:linear-gradient(180deg,#000 0%,#0a0a0a 100%);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;}
+.masthead{padding:22px 0 0;}
+.brand-row{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+.brand h1{font-family:var(--disp);font-weight:900;font-size:30px;letter-spacing:-0.5px;color:var(--red);text-transform:uppercase;}
+.brand p{font-family:var(--body);font-size:12.5px;color:var(--text-dim);margin-top:3px;letter-spacing:0.2px;}
+.disclaimer{font-family:var(--mono);font-size:10.5px;color:var(--text-faint);background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:6px 10px;max-width:340px;line-height:1.45;}
+.disclaimer b{color:var(--gold);}
+
+.ticker{display:flex;gap:0;margin-top:18px;border-top:1px solid var(--border);overflow-x:auto;}
+.tick{flex:1;min-width:120px;padding:12px 18px;border-right:1px solid var(--border);}
+.tick:last-child{border-right:none;}
+.tick .tl{font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.6px;font-weight:600;}
+.tick .tv{font-family:var(--mono);font-size:19px;font-weight:700;margin-top:3px;color:var(--text);}
+.tick .tv.up{color:var(--green);}
+.tick .td2{font-size:10.5px;color:var(--text-dim);margin-top:1px;}
+
+nav{display:flex;gap:2px;overflow-x:auto;border-top:1px solid var(--border);}
+nav a{font-size:12px;font-weight:600;color:var(--text-dim);padding:12px 16px;white-space:nowrap;border-bottom:2px solid transparent;transition:.15s;}
+nav a:hover{color:var(--text);border-bottom-color:var(--red-dim);}
+
+/* ---------- Sections ---------- */
+section{padding:44px 0;border-bottom:1px solid var(--border);}
+.sec-tag{font-family:var(--mono);font-size:11px;color:var(--red);letter-spacing:1px;font-weight:600;margin-bottom:6px;}
+.sec-title{font-family:var(--disp);font-size:24px;font-weight:800;letter-spacing:-0.3px;}
+.sec-sub{font-size:12.5px;color:var(--text-dim);margin-top:5px;max-width:720px;}
+
+/* ---------- Hero KPI (signature element) ---------- */
+.hero{display:flex;gap:40px;align-items:flex-end;flex-wrap:wrap;margin:26px 0 30px;}
+.hero-num{font-family:var(--disp);font-weight:900;font-size:68px;letter-spacing:-2px;line-height:1;
+  border-bottom:5px solid var(--red);padding-bottom:10px;}
+.hero-num span{font-size:24px;color:var(--text-dim);font-weight:600;margin-left:6px;}
+.hero-cap{font-size:12px;color:var(--text-dim);margin-top:8px;text-transform:uppercase;letter-spacing:0.5px;}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-top:20px;}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:14px 16px;border-left:3px solid var(--red-dim);}
+.kpi .kl{font-size:10.5px;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.5px;font-weight:600;}
+.kpi .kv{font-family:var(--mono);font-size:20px;font-weight:700;margin-top:5px;}
+.kpi .kd{font-size:10.5px;margin-top:3px;color:var(--text-dim);}
+.kpi .kd.pos{color:var(--green);} .kpi .kd.neg{color:var(--red);}
+
+/* ---------- Cards / Grid ---------- */
+.grid2{display:grid;grid-template-columns:1.3fr 1fr;gap:16px;margin-top:20px;}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px;}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:18px 20px;}
+.card-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.ch-title{font-size:13px;font-weight:700;letter-spacing:0.2px;}
+.ch-sub{font-size:11px;color:var(--text-faint);margin-top:2px;}
+.chart-box{position:relative;height:280px;}
+.chart-box.sm{height:220px;}
+
+/* ---------- Region cards ---------- */
+.region-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px;}
+.region-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:18px;cursor:pointer;transition:.15s;border-top:3px solid var(--border);}
+.region-card:hover{border-color:var(--red-dim);}
+.region-card.active{border-top-color:var(--red);background:var(--surface2);box-shadow:0 0 0 1px var(--red-dim);}
+.region-card .rc-code{font-family:var(--mono);font-size:11px;color:var(--red);font-weight:700;letter-spacing:1px;}
+.region-card .rc-name{font-size:13px;font-weight:600;margin-top:4px;color:var(--text-dim);}
+.region-card .rc-rev{font-family:var(--mono);font-size:24px;font-weight:700;margin-top:10px;}
+.region-card .rc-meta{display:flex;gap:14px;margin-top:8px;font-size:11px;color:var(--text-dim);}
+.region-card .rc-meta b{color:var(--text);font-family:var(--mono);}
+
+/* ---------- Tables ---------- */
+.tbl{width:100%;border-collapse:collapse;font-size:12.5px;}
+.tbl th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:0.4px;color:var(--text-faint);
+  padding:8px 10px;border-bottom:1px solid var(--border);font-weight:600;}
+.tbl td{padding:9px 10px;border-bottom:1px solid #1a1a1a;font-family:var(--body);}
+.tbl td.mono{font-family:var(--mono);}
+.tbl tr:hover td{background:var(--surface2);}
+.tbl td.pos{color:var(--green);font-family:var(--mono);}
+.tbl .bar-cell{display:flex;align-items:center;gap:8px;}
+.bar-track{flex:1;height:5px;background:#262626;border-radius:3px;overflow:hidden;min-width:50px;}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--red-dim),var(--red));border-radius:3px;}
+.pill{display:inline-block;font-size:10px;font-family:var(--mono);padding:2px 7px;border-radius:3px;background:var(--surface2);color:var(--text-dim);border:1px solid var(--border);}
+.pill.g{color:var(--green);border-color:#1c4a30;}
+
+.section-tabs{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;}
+.stab{font-size:11.5px;font-weight:600;padding:7px 14px;border-radius:20px;background:var(--surface);border:1px solid var(--border);color:var(--text-dim);cursor:pointer;transition:.15s;}
+.stab:hover{color:var(--text);}
+.stab.on{background:var(--red);border-color:var(--red);color:#fff;}
+
+footer{padding:28px 0 40px;text-align:center;}
+footer p{font-size:11px;color:var(--text-faint);font-family:var(--mono);}
+footer .fd{color:var(--gold);}
+
+@media(max-width:900px){
+  .kpi-grid{grid-template-columns:repeat(2,1fr);}
+  .grid2{grid-template-columns:1fr;}
+  .grid3{grid-template-columns:1fr 1fr;}
+  .grid4{grid-template-columns:1fr 1fr;}
+  .region-grid{grid-template-columns:1fr 1fr;}
+  .hero-num{font-size:44px;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap masthead">
+    <div class="brand-row">
+      <div class="brand">
+        <h1>STREAMLINE</h1>
+        <p>Streaming Finance &amp; Content Analytics — FY2025 · Global Operations</p>
+      </div>
+      <div class="disclaimer"><b>Illustrative data.</b> Independent portfolio project built with synthetic sample data for demonstration purposes. Netflix-inspired visual styling only — not affiliated with, endorsed by, or sourced from Netflix, Inc.</div>
+    </div>
+    <div class="ticker">
+      <div class="tick"><div class="tl">Revenue (Q4'25)</div><div class="tv">$10,726M</div><div class="td2">Global, all regions</div></div>
+      <div class="tick"><div class="tl">Subscribers</div><div class="tv">302.9M</div><div class="td2">Paid memberships</div></div>
+      <div class="tick"><div class="tl">ARPU</div><div class="tv">$12.63</div><div class="td2">Monthly, per member</div></div>
+      <div class="tick"><div class="tl">YoY Revenue</div><div class="tv up">+11.6%</div><div class="td2">vs. Q4'24</div></div>
+      <div class="tick"><div class="tl">Operating Margin</div><div class="tv">28.8%</div><div class="td2">Q4'25</div></div>
+      <div class="tick"><div class="tl">Churn Rate</div><div class="tv">2.4%</div><div class="td2">Monthly, blended</div></div>
+    </div>
+  </div>
+  <nav class="wrap">
+    <a href="#s-summary">Executive Summary</a>
+    <a href="#s-region">Region</a>
+    <a href="#s-country">Country</a>
+    <a href="#s-city">City &amp; State</a>
+    <a href="#s-plans">Subscriber Plans</a>
+    <a href="#s-genre">Content Genres</a>
+    <a href="#s-content">Top Content</a>
+    <a href="#s-platform">Platform &amp; Device</a>
+    <a href="#s-pnl">Financial Summary</a>
+  </nav>
+</header>
+
+<div class="wrap">
+
+<section id="s-summary">
+  <div class="sec-tag">01 / Executive Summary</div>
+  <div class="sec-title">Global Performance at a Glance</div>
+  <div class="sec-sub">Quarterly revenue, subscriber base, and profitability across all regions — Q4 2025.</div>
+
+  <div class="hero">
+    <div>
+      <div class="hero-num">$10.73B<span>USD, quarterly</span></div>
+      <div class="hero-cap">Global Streaming Revenue — Q4 2025</div>
+    </div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kl">Total Subscribers</div><div class="kv">302.9M</div><div class="kd pos">+8.9% YoY</div></div>
+    <div class="kpi"><div class="kl">ARPU (Monthly)</div><div class="kv">$12.63</div><div class="kd pos">+3.1% YoY</div></div>
+    <div class="kpi"><div class="kl">Revenue YoY</div><div class="kv">+11.6%</div><div class="kd pos">Accelerating</div></div>
+    <div class="kpi"><div class="kl">Operating Margin</div><div class="kv">28.8%</div><div class="kd pos">+1.8 pts YoY</div></div>
+    <div class="kpi"><div class="kl">Annual Content Investment</div><div class="kv">$11.1B</div><div class="kd">Across 10 genres</div></div>
+    <div class="kpi"><div class="kl">Monthly Churn</div><div class="kv">2.4%</div><div class="kd pos">-0.3 pts YoY</div></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-hdr"><div><div class="ch-title">Revenue Trend</div><div class="ch-sub">Quarterly, last 8 quarters ($M)</div></div></div>
+      <div class="chart-box"><canvas id="chRevTrend"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-hdr"><div><div class="ch-title">Operating Margin Trend</div><div class="ch-sub">Quarterly, % of revenue</div></div></div>
+      <div class="chart-box"><canvas id="chMarginTrend"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<section id="s-region">
+  <div class="sec-tag">02 / Region Performance</div>
+  <div class="sec-title">Revenue &amp; Subscribers by Region</div>
+  <div class="sec-sub">Netflix's four public reporting segments. Click a region to filter the Country breakdown below.</div>
+
+  <div class="region-grid" id="regionGrid"></div>
+
+  <div class="grid2" style="margin-top:20px;">
+    <div class="card">
+      <div class="card-hdr"><div class="ch-title">Revenue by Region</div></div>
+      <div class="chart-box"><canvas id="chRegion"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-hdr"><div class="ch-title">Subscribers by Region</div></div>
+      <div class="chart-box"><canvas id="chRegionSubs"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<section id="s-country">
+  <div class="sec-tag">03 / Country Breakdown</div>
+  <div class="sec-title" id="countryTitle">Top Countries — All Regions</div>
+  <div class="sec-sub">Revenue, subscribers, ARPU, and growth by country. <span id="countryFilterNote"></span></div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-hdr"><div class="ch-title">Revenue by Country</div></div>
+      <div class="chart-box" style="height:340px;"><canvas id="chCountry"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-hdr"><div class="ch-title">Country Detail</div></div>
+      <div style="max-height:340px;overflow-y:auto;">
+        <table class="tbl"><thead><tr><th>Country</th><th>Region</th><th>Subs (M)</th><th>Revenue ($M)</th><th>ARPU</th><th>YoY</th></tr></thead>
+        <tbody id="countryTbody"></tbody></table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s-city">
+  <div class="sec-tag">04 / City &amp; State Drill-Down</div>
+  <div class="sec-title">Subscriber Density — Top Cities</div>
+  <div class="sec-sub">State/province and city-level breakdown for four sample markets — United States, India, Brazil, United Kingdom.</div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-hdr"><div class="ch-title">Top 10 Cities by Revenue</div></div>
+      <div class="chart-box" style="height:360px;"><canvas id="chCity"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-hdr"><div class="ch-title">Full City / State Detail</div></div>
+      <div style="max-height:360px;overflow-y:auto;">
+        <table class="tbl"><thead><tr><th>Country</th><th>State / Region</th><th>City</th><th>Subs (M)</th><th>Revenue ($M)</th></tr></thead>
+        <tbody id="cityTbody"></tbody></table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s-plans">
+  <div class="sec-tag">05 / Subscriber Plans</div>
+  <div class="sec-title">Revenue &amp; Subscribers by Plan Tier</div>
+  <div class="sec-sub">User-wise breakdown across the four active plan tiers.</div>
+
+  <div class="grid3">
+    <div class="card">
+      <div class="card-hdr"><div class="ch-title">Subscribers by Plan</div></div>
+      <div class="chart-box sm"><canvas id="chPlanSubs"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-hdr"><div class="ch-title">Revenue by Plan</div></div>
+      <div class="chart-box sm"><canvas id="chPlanRev"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-hdr"><div class="ch-title">ARPU by Plan</div></div>
+      <div class="chart-box sm"><canvas id="chPlanArpu"></canvas></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px;">
+    <table class="tbl"><thead><tr><th>Plan</th><th>Subscribers (M)</th><th>Revenue ($M)</th><th>ARPU (Monthly)</th><th>Share of Base</th></tr></thead>
+    <tbody id="planTbody"></tbody></table>
+  </div>
+</section>
+
+<section id="s-genre">
+  <div class="sec-tag">06 / Content Genres</div>
+  <div class="sec-title">Viewership &amp; Investment by Genre</div>
+  <div class="sec-sub">Hours viewed vs. annual content spend across 10 categories. Circle size in the table reflects catalog completion rate.</div>
+
+  <div class="card">
+    <div class="card-hdr"><div class="ch-title">Hours Viewed vs. Content Spend</div><div class="ch-sub">Millions of hours (bars) · $M spend (line)</div></div>
+    <div class="chart-box" style="height:320px;"><canvas id="chGenre"></canvas></div>
+  </div>
+  <div class="card" style="margin-top:14px;">
+    <table class="tbl"><thead><tr><th>Genre</th><th>Hours Viewed (M)</th><th>Content Spend ($M)</th><th>Titles</th><th>Completion Rate</th></tr></thead>
+    <tbody id="genreTbody"></tbody></table>
+  </div>
+</section>
+
+<section id="s-content">
+  <div class="sec-tag">07 / Top Content</div>
+  <div class="sec-title">Highest-Performing Titles</div>
+  <div class="sec-sub">Illustrative original titles ranked by hours viewed, with content spend and ROI multiple. Titles are fictional sample placeholders.</div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-hdr"><div class="ch-title">Top 10 Titles by Hours Viewed</div></div>
+      <div class="chart-box" style="height:380px;"><canvas id="chContent"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-hdr"><div class="ch-title">Full Title Detail</div></div>
+      <div style="max-height:380px;overflow-y:auto;">
+        <table class="tbl"><thead><tr><th>Title</th><th>Genre</th><th>Spend ($M)</th><th>Hours (M)</th><th>ROI</th></tr></thead>
+        <tbody id="contentTbody"></tbody></table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s-platform">
+  <div class="sec-tag">08 / Platform &amp; Device</div>
+  <div class="sec-title">Viewing Hours &amp; Revenue by Platform</div>
+  <div class="sec-sub">Device and access-channel mix — Smart TV, mobile apps, web browser, console, and tablet.</div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-hdr"><div class="ch-title">Share of Viewing Hours</div></div>
+      <div class="chart-box"><canvas id="chPlatHours"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-hdr"><div class="ch-title">Share of Revenue</div></div>
+      <div class="chart-box"><canvas id="chPlatRev"></canvas></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px;">
+    <table class="tbl"><thead><tr><th>Platform</th><th>Hours Share</th><th>Revenue Share</th></tr></thead>
+    <tbody id="platTbody"></tbody></table>
+  </div>
+</section>
+
+<section id="s-pnl">
+  <div class="sec-tag">09 / Financial Summary</div>
+  <div class="sec-title">Quarterly P&amp;L — Last 8 Quarters</div>
+  <div class="sec-sub">Revenue, cost of revenue, operating expenses, and margins. All figures in $M unless noted.</div>
+
+  <div class="card">
+    <table class="tbl"><thead><tr><th>Quarter</th><th>Revenue</th><th>Cost of Rev.</th><th>Marketing</th><th>Tech &amp; Dev</th><th>G&amp;A</th><th>Op. Income</th><th>Op. Margin</th><th>Net Income</th></tr></thead>
+    <tbody id="pnlTbody"></tbody></table>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  <p>Streamline Finance &amp; Content Analytics &nbsp;·&nbsp; <span class="fd">Illustrative / synthetic data — built for portfolio demonstration only</span> &nbsp;·&nbsp; Not affiliated with Netflix, Inc.</p>
+</footer>
+
+<script>
+const DATA = {"regions":[{"code":"UCAN","name":"United States & Canada","subs":89.9,"rev":5261.0,"yoy":9.2,"arpu":17.29},{"code":"EMEA","name":"Europe, Middle East & Africa","subs":98.3,"rev":3302.0,"yoy":11.4,"arpu":12.87},{"code":"LATAM","name":"Latin America","subs":52.6,"rev":1066.0,"yoy":7.8,"arpu":8.65},{"code":"APAC","name":"Asia-Pacific","subs":62.1,"rev":1097.0,"yoy":18.6,"arpu":7.51}],"countries":[{"country":"United States","region":"UCAN","subs":74.2,"rev":4393.0,"arpu":18.12,"yoy":8.4},{"country":"Canada","region":"UCAN","subs":15.7,"rev":868.0,"arpu":16.94,"yoy":11.7},{"country":"United Kingdom","region":"EMEA","subs":17.1,"rev":636.0,"arpu":14.28,"yoy":9.9},{"country":"Germany","region":"EMEA","subs":14.4,"rev":510.0,"arpu":13.55,"yoy":8.1},{"country":"France","region":"EMEA","subs":11.8,"rev":390.0,"arpu":12.61,"yoy":7.3},{"country":"Spain","region":"EMEA","subs":9.2,"rev":267.0,"arpu":11.02,"yoy":10.5},{"country":"Italy","region":"EMEA","subs":7.6,"rev":209.0,"arpu":10.44,"yoy":6.9},{"country":"Poland","region":"EMEA","subs":6.1,"rev":139.0,"arpu":8.72,"yoy":14.2},{"country":"Brazil","region":"LATAM","subs":21.4,"rev":390.0,"arpu":6.94,"yoy":9.1},{"country":"Mexico","region":"LATAM","subs":16.8,"rev":331.0,"arpu":7.62,"yoy":6.4},{"country":"Argentina","region":"LATAM","subs":7.9,"rev":122.0,"arpu":6.18,"yoy":5.2},{"country":"Colombia","region":"LATAM","subs":6.5,"rev":100.0,"arpu":6.01,"yoy":8.8},{"country":"India","region":"APAC","subs":11.8,"rev":139.0,"arpu":4.72,"yoy":24.3},{"country":"Japan","region":"APAC","subs":9.3,"rev":244.0,"arpu":10.38,"yoy":11.2},{"country":"South Korea","region":"APAC","subs":8.1,"rev":209.0,"arpu":9.87,"yoy":13.6},{"country":"Australia","region":"APAC","subs":6.4,"rev":233.0,"arpu":14.21,"yoy":7.9},{"country":"Philippines","region":"APAC","subs":4.2,"rev":45.0,"arpu":4.15,"yoy":22.1}],"cityState":[{"country":"United States","state":"California","city":"Los Angeles","subs":9.8,"rev":178.2},{"country":"United States","state":"New York","city":"New York City","subs":7.1,"rev":129.4},{"country":"United States","state":"Texas","city":"Houston","subs":6.4,"rev":109.8},{"country":"United States","state":"Florida","city":"Miami","subs":5.7,"rev":97.3},{"country":"United States","state":"Illinois","city":"Chicago","subs":3.9,"rev":68.1},{"country":"United States","state":"Washington","city":"Seattle","subs":2.8,"rev":52.9},{"country":"United States","state":"Georgia","city":"Atlanta","subs":2.6,"rev":46.4},{"country":"United States","state":"Massachusetts","city":"Boston","subs":2.1,"rev":39.7},{"country":"India","state":"Maharashtra","city":"Mumbai","subs":2.31,"rev":9.8},{"country":"India","state":"Karnataka","city":"Bengaluru","subs":1.87,"rev":8.1},{"country":"India","state":"Delhi NCR","city":"New Delhi","subs":1.64,"rev":7.2},{"country":"India","state":"Tamil Nadu","city":"Chennai","subs":1.22,"rev":4.9},{"country":"India","state":"Telangana","city":"Hyderabad","subs":1.05,"rev":4.4},{"country":"India","state":"West Bengal","city":"Kolkata","subs":0.81,"rev":3.1},{"country":"India","state":"Gujarat","city":"Ahmedabad","subs":0.74,"rev":2.8},{"country":"India","state":"Uttar Pradesh","city":"Lucknow","subs":0.62,"rev":2.2},{"country":"Brazil","state":"S\u00e3o Paulo","city":"S\u00e3o Paulo","subs":4.8,"rev":108.4},{"country":"Brazil","state":"Rio de Janeiro","city":"Rio de Janeiro","subs":2.1,"rev":46.9},{"country":"Brazil","state":"Minas Gerais","city":"Belo Horizonte","subs":1.6,"rev":34.2},{"country":"Brazil","state":"Paran\u00e1","city":"Curitiba","subs":1.1,"rev":23.6},{"country":"Brazil","state":"Bahia","city":"Salvador","subs":0.9,"rev":18.7},{"country":"United Kingdom","state":"England","city":"London","subs":6.8,"rev":321.4},{"country":"United Kingdom","state":"Scotland","city":"Edinburgh","subs":1.4,"rev":64.8},{"country":"United Kingdom","state":"England","city":"Manchester","subs":1.9,"rev":88.2},{"country":"United Kingdom","state":"Wales","city":"Cardiff","subs":0.7,"rev":31.6},{"country":"United Kingdom","state":"Northern Ireland","city":"Belfast","subs":0.5,"rev":22.1}],"plans":[{"plan":"Premium (4K, 4 screens)","subs":118.4,"rev":5393.0,"arpu":19.38,"share":38.7},{"plan":"Standard (HD, 2 screens)","subs":94.1,"rev":3291.0,"arpu":14.88,"share":30.7},{"plan":"Standard with Ads","subs":71.6,"rev":1515.0,"arpu":9.01,"share":23.4},{"plan":"Basic (legacy, grandfathered)","subs":18.8,"rev":527.0,"arpu":11.94,"share":6.1}],"genres":[{"genre":"Drama","hours":4218,"spend":2140,"titles":812,"completion":71.2},{"genre":"Action & Adventure","hours":3654,"spend":2680,"titles":486,"completion":68.4},{"genre":"Comedy","hours":2981,"spend":1120,"titles":694,"completion":74.8},{"genre":"Thriller & Crime","hours":2765,"spend":1580,"titles":401,"completion":76.3},{"genre":"Kids & Family","hours":2412,"spend":890,"titles":1120,"completion":81.6},{"genre":"Documentary","hours":1548,"spend":410,"titles":356,"completion":58.9},{"genre":"Anime","hours":1893,"spend":640,"titles":278,"completion":79.1},{"genre":"Sci-Fi & Fantasy","hours":1672,"spend":980,"titles":214,"completion":72.5},{"genre":"Romance","hours":1289,"spend":390,"titles":312,"completion":69.7},{"genre":"Reality TV","hours":1104,"spend":260,"titles":198,"completion":64.2}],"topContent":[{"title":"Windmere Prep","genre":"Comedy","type":"Original Series","spend":95.8,"hours":905.8,"roi":3.97},{"title":"Kestrel Point","genre":"Action & Adventure","type":"Original Series","spend":124.5,"hours":636.4,"roi":2.15},{"title":"The Cartographer's Daughter","genre":"Documentary","type":"Original Film","spend":70.6,"hours":611.2,"roi":3.64},{"title":"Ashes of Rangoon","genre":"Thriller & Crime","type":"Original Film","spend":89.6,"hours":521.3,"roi":2.44},{"title":"The Long Ferry Home","genre":"Romance","type":"Original Film","spend":139.1,"hours":487.9,"roi":1.47},{"title":"The Understudy","genre":"Drama","type":"Original Film","spend":56.3,"hours":483.4,"roi":3.61},{"title":"Midnight in Alderbrook","genre":"Drama","type":"Original Series","spend":84.4,"hours":473.8,"roi":2.36},{"title":"The Departure Protocol","genre":"Sci-Fi & Fantasy","type":"Original Series","spend":98.7,"hours":363.0,"roi":1.54},{"title":"Harbor Lights Season 3","genre":"Reality TV","type":"Original Series","spend":40.4,"hours":284.4,"roi":2.96},{"title":"Crimson Horizon","genre":"Action & Adventure","type":"Original Film","spend":58.2,"hours":244.2,"roi":1.76},{"title":"Paper Kingdoms","genre":"Drama","type":"Original Series","spend":25.2,"hours":165.0,"roi":2.75},{"title":"Static & Stone","genre":"Anime","type":"Original Series","spend":33.4,"hours":156.1,"roi":1.96},{"title":"Backyard Universe","genre":"Kids & Family","type":"Original Series","spend":35.9,"hours":142.8,"roi":1.67},{"title":"Last Light District","genre":"Thriller & Crime","type":"Original Series","spend":22.6,"hours":137.0,"roi":2.55},{"title":"Nine Lives of Mrs. Okafor","genre":"Comedy","type":"Original Film","spend":26.7,"hours":101.4,"roi":1.6}],"platforms":[{"platform":"Smart TV","hours_share":47.8,"rev_share":44.2},{"platform":"Mobile \u2013 Android","hours_share":18.3,"rev_share":16.1},{"platform":"Mobile \u2013 iOS","hours_share":14.6,"rev_share":17.9},{"platform":"Web Browser","hours_share":9.4,"rev_share":11.8},{"platform":"Gaming Console","hours_share":6.1,"rev_share":5.7},{"platform":"Tablet","hours_share":3.8,"rev_share":4.3}],"pnl":[{"q":"Q1'24","revenue":8841.1,"cos":4519.3,"marketing":637.6,"techdev":580.2,"ga":314.7,"opincome":2789.3,"margin":31.5,"netincome":2327.4},{"q":"Q2'24","revenue":9091.7,"cos":4662.5,"marketing":628.1,"techdev":644.2,"ga":359.4,"opincome":2797.5,"margin":30.8,"netincome":2352.7},{"q":"Q3'24","revenue":9355.0,"cos":4873.7,"marketing":637.8,"techdev":661.8,"ga":376.6,"opincome":2805.1,"margin":30.0,"netincome":2472.0},{"q":"Q4'24","revenue":9611.0,"cos":4888.5,"marketing":747.2,"techdev":636.1,"ga":376.6,"opincome":2962.6,"margin":30.8,"netincome":2586.3},{"q":"Q1'25","revenue":9833.4,"cos":5060.9,"marketing":644.2,"techdev":704.9,"ga":419.4,"opincome":3004.0,"margin":30.5,"netincome":2583.8},{"q":"Q2'25","revenue":10167.4,"cos":5179.4,"marketing":752.8,"techdev":721.3,"ga":414.8,"opincome":3099.1,"margin":30.5,"netincome":2640.2},{"q":"Q3'25","revenue":10448.4,"cos":5520.3,"marketing":743.5,"techdev":748.5,"ga":372.0,"opincome":3064.1,"margin":29.3,"netincome":2663.0},{"q":"Q4'25","revenue":10724.8,"cos":5681.9,"marketing":811.7,"techdev":727.6,"ga":416.7,"opincome":3086.9,"margin":28.8,"netincome":2675.7}],"kpi":{"totalRevenue":10726.0,"totalSubs":302.9,"arpu":12.63,"yoyRevenue":11.6,"opMargin":28.8,"contentSpend":11090,"churnRate":2.4}};
+const RED='#E50914', REDDIM='#8c0a10', GOLD='#E8B93B', GREEN='#3ECF6E', GREY='#4a4a4a', TXT='#B3B3B3';
+Chart.defaults.color = TXT;
+Chart.defaults.font.family = "'Inter',sans-serif";
+Chart.defaults.font.size = 11;
+Chart.defaults.borderColor = '#2b2b2b';
+
+function fmtM(n){ return n>=1000 ? (n/1000).toFixed(2)+'B' : Math.round(n).toLocaleString(); }
+function barGrid(){ return {color:'#222',drawTicks:false}; }
+
+// ---------- Region cards ----------
+const regionGrid = document.getElementById('regionGrid');
+let activeRegion = null;
+function renderRegionCards(){
+  regionGrid.innerHTML = DATA.regions.map(r=>`
+    <div class="region-card ${activeRegion===r.code?'active':''}" data-code="${r.code}">
+      <div class="rc-code">${r.code}</div>
+      <div class="rc-name">${r.name}</div>
+      <div class="rc-rev">$${r.rev.toLocaleString()}M</div>
+      <div class="rc-meta"><span>Subs <b>${r.subs}M</b></span><span>YoY <b>+${r.yoy}%</b></span></div>
+    </div>`).join('');
+  regionGrid.querySelectorAll('.region-card').forEach(el=>{
+    el.addEventListener('click',()=>{
+      const code = el.dataset.code;
+      activeRegion = (activeRegion===code) ? null : code;
+      renderRegionCards();
+      renderCountryTable();
+    });
+  });
+}
+renderRegionCards();
+
+// ---------- Country table + chart ----------
+const countryTitle = document.getElementById('countryTitle');
+const countryFilterNote = document.getElementById('countryFilterNote');
+let chCountryInst = null;
+function renderCountryTable(){
+  const rows = activeRegion ? DATA.countries.filter(c=>c.region===activeRegion) : DATA.countries;
+  countryTitle.textContent = activeRegion ? `Top Countries — ${activeRegion}` : 'Top Countries — All Regions';
+  countryFilterNote.textContent = activeRegion ? 'Filtered by region — click the region again to clear.' : '';
+  const sorted = [...rows].sort((a,b)=>b.rev-a.rev);
+  document.getElementById('countryTbody').innerHTML = sorted.map(c=>`
+    <tr><td>${c.country}</td><td><span class="pill">${c.region}</span></td>
+    <td class="mono">${c.subs}</td><td class="mono">$${c.rev.toLocaleString()}</td>
+    <td class="mono">$${c.arpu}</td><td class="pos">+${c.yoy}%</td></tr>`).join('');
+  if(chCountryInst) chCountryInst.destroy();
+  chCountryInst = new Chart(document.getElementById('chCountry'), {
+    type:'bar',
+    data:{labels:sorted.map(c=>c.country),
+      datasets:[{data:sorted.map(c=>c.rev), backgroundColor:RED, borderRadius:3, barThickness:14}]},
+    options:{indexAxis:'y', plugins:{legend:{display:false}},
+      scales:{x:{grid:barGrid(),ticks:{callback:v=>'$'+v}},y:{grid:{display:false}}}}
+  });
+}
+renderCountryTable();
+
+// ---------- City table + chart ----------
+document.getElementById('cityTbody').innerHTML = DATA.cityState.map(c=>`
+  <tr><td>${c.country}</td><td>${c.state}</td><td>${c.city}</td>
+  <td class="mono">${c.subs}</td><td class="mono">$${c.rev}</td></tr>`).join('');
+const topCities = [...DATA.cityState].sort((a,b)=>b.rev-a.rev).slice(0,10);
+new Chart(document.getElementById('chCity'), {
+  type:'bar',
+  data:{labels:topCities.map(c=>c.city+', '+c.country),
+    datasets:[{data:topCities.map(c=>c.rev), backgroundColor:GOLD, borderRadius:3, barThickness:14}]},
+  options:{indexAxis:'y', plugins:{legend:{display:false}},
+    scales:{x:{grid:barGrid(),ticks:{callback:v=>'$'+v+'M'}},y:{grid:{display:false}}}}
+});
+
+// ---------- Plans ----------
+document.getElementById('planTbody').innerHTML = DATA.plans.map(p=>`
+  <tr><td>${p.plan}</td><td class="mono">${p.subs}</td><td class="mono">$${p.rev.toLocaleString()}</td>
+  <td class="mono">$${p.arpu}</td><td><div class="bar-cell"><div class="bar-track"><div class="bar-fill" style="width:${p.share}%"></div></div><span class="mono">${p.share}%</span></div></td></tr>`).join('');
+new Chart(document.getElementById('chPlanSubs'), {
+  type:'doughnut',
+  data:{labels:DATA.plans.map(p=>p.plan), datasets:[{data:DATA.plans.map(p=>p.subs), backgroundColor:[RED,REDDIM,GOLD,GREY], borderColor:'#141414', borderWidth:2}]},
+  options:{plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:9.5}}}}}
+});
+new Chart(document.getElementById('chPlanRev'), {
+  type:'bar',
+  data:{labels:DATA.plans.map(p=>p.plan.split(' ')[0]), datasets:[{data:DATA.plans.map(p=>p.rev), backgroundColor:RED, borderRadius:4}]},
+  options:{plugins:{legend:{display:false}}, scales:{y:{grid:barGrid()},x:{grid:{display:false}}}}
+});
+new Chart(document.getElementById('chPlanArpu'), {
+  type:'bar',
+  data:{labels:DATA.plans.map(p=>p.plan.split(' ')[0]), datasets:[{data:DATA.plans.map(p=>p.arpu), backgroundColor:GOLD, borderRadius:4}]},
+  options:{plugins:{legend:{display:false}}, scales:{y:{grid:barGrid(),ticks:{callback:v=>'$'+v}},x:{grid:{display:false}}}}
+});
+
+// ---------- Genres ----------
+document.getElementById('genreTbody').innerHTML = DATA.genres.map(g=>`
+  <tr><td>${g.genre}</td><td class="mono">${g.hours.toLocaleString()}</td><td class="mono">$${g.spend.toLocaleString()}</td>
+  <td class="mono">${g.titles}</td><td><div class="bar-cell"><div class="bar-track"><div class="bar-fill" style="width:${g.completion}%"></div></div><span class="mono">${g.completion}%</span></div></td></tr>`).join('');
+const genreSorted = [...DATA.genres].sort((a,b)=>b.hours-a.hours);
+new Chart(document.getElementById('chGenre'), {
+  data:{labels:genreSorted.map(g=>g.genre),
+    datasets:[
+      {type:'bar', label:'Hours Viewed (M)', data:genreSorted.map(g=>g.hours), backgroundColor:RED, borderRadius:3, yAxisID:'y'},
+      {type:'line', label:'Content Spend ($M)', data:genreSorted.map(g=>g.spend), borderColor:GOLD, backgroundColor:GOLD, tension:.3, yAxisID:'y1', pointRadius:3}
+    ]},
+  options:{plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10}}}},
+    scales:{y:{position:'left',grid:barGrid(),title:{display:true,text:'Hours (M)',font:{size:10}}},
+      y1:{position:'right',grid:{display:false},title:{display:true,text:'Spend ($M)',font:{size:10}}},
+      x:{grid:{display:false},ticks:{maxRotation:35,minRotation:35,font:{size:9.5}}}}}
+});
+
+// ---------- Top content ----------
+document.getElementById('contentTbody').innerHTML = DATA.topContent.map(c=>`
+  <tr><td>${c.title}<div style="font-size:10px;color:var(--text-faint);">${c.type}</div></td><td><span class="pill">${c.genre}</span></td>
+  <td class="mono">$${c.spend}</td><td class="mono">${c.hours}</td><td class="pos">${c.roi}×</td></tr>`).join('');
+const topC = [...DATA.topContent].sort((a,b)=>b.hours-a.hours).slice(0,10);
+new Chart(document.getElementById('chContent'), {
+  type:'bar',
+  data:{labels:topC.map(c=>c.title), datasets:[{data:topC.map(c=>c.hours), backgroundColor:RED, borderRadius:3, barThickness:14}]},
+  options:{indexAxis:'y', plugins:{legend:{display:false}},
+    scales:{x:{grid:barGrid(),ticks:{callback:v=>v+'M hrs'}},y:{grid:{display:false},ticks:{font:{size:10.5}}}}}
+});
+
+// ---------- Platform ----------
+document.getElementById('platTbody').innerHTML = DATA.platforms.map(p=>`
+  <tr><td>${p.platform}</td><td class="mono">${p.hours_share}%</td><td class="mono">${p.rev_share}%</td></tr>`).join('');
+new Chart(document.getElementById('chPlatHours'), {
+  type:'doughnut',
+  data:{labels:DATA.platforms.map(p=>p.platform), datasets:[{data:DATA.platforms.map(p=>p.hours_share), backgroundColor:[RED,REDDIM,GOLD,'#6b6b6b',GREEN,'#3a3a3a'], borderColor:'#141414', borderWidth:2}]},
+  options:{plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:9.5}}}}}
+});
+new Chart(document.getElementById('chPlatRev'), {
+  type:'doughnut',
+  data:{labels:DATA.platforms.map(p=>p.platform), datasets:[{data:DATA.platforms.map(p=>p.rev_share), backgroundColor:[RED,REDDIM,GOLD,'#6b6b6b',GREEN,'#3a3a3a'], borderColor:'#141414', borderWidth:2}]},
+  options:{plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:9.5}}}}}
+});
+
+// ---------- P&L ----------
+document.getElementById('pnlTbody').innerHTML = DATA.pnl.map(q=>`
+  <tr><td class="mono">${q.q}</td><td class="mono">$${q.revenue.toLocaleString()}</td><td class="mono">$${q.cos.toLocaleString()}</td>
+  <td class="mono">$${q.marketing.toLocaleString()}</td><td class="mono">$${q.techdev.toLocaleString()}</td><td class="mono">$${q.ga.toLocaleString()}</td>
+  <td class="mono">$${q.opincome.toLocaleString()}</td><td class="mono pos">${q.margin}%</td><td class="mono">$${q.netincome.toLocaleString()}</td></tr>`).join('');
+
+// ---------- Trend charts (Executive Summary) ----------
+new Chart(document.getElementById('chRevTrend'), {
+  type:'line',
+  data:{labels:DATA.pnl.map(q=>q.q), datasets:[{data:DATA.pnl.map(q=>q.revenue), borderColor:RED, backgroundColor:'rgba(229,9,20,0.12)', fill:true, tension:.35, pointRadius:3, pointBackgroundColor:RED}]},
+  options:{plugins:{legend:{display:false}}, scales:{y:{grid:barGrid(),ticks:{callback:v=>'$'+(v/1000).toFixed(1)+'B'}},x:{grid:{display:false}}}}
+});
+new Chart(document.getElementById('chMarginTrend'), {
+  type:'line',
+  data:{labels:DATA.pnl.map(q=>q.q), datasets:[{data:DATA.pnl.map(q=>q.margin), borderColor:GOLD, backgroundColor:'rgba(232,185,59,0.12)', fill:true, tension:.35, pointRadius:3, pointBackgroundColor:GOLD}]},
+  options:{plugins:{legend:{display:false}}, scales:{y:{grid:barGrid(),ticks:{callback:v=>v+'%'}},x:{grid:{display:false}}}}
+});
+
+// ---------- Region charts ----------
+new Chart(document.getElementById('chRegion'), {
+  type:'bar',
+  data:{labels:DATA.regions.map(r=>r.code), datasets:[{data:DATA.regions.map(r=>r.rev), backgroundColor:RED, borderRadius:4}]},
+  options:{plugins:{legend:{display:false}}, scales:{y:{grid:barGrid(),ticks:{callback:v=>'$'+v}},x:{grid:{display:false}}}}
+});
+new Chart(document.getElementById('chRegionSubs'), {
+  type:'doughnut',
+  data:{labels:DATA.regions.map(r=>r.code), datasets:[{data:DATA.regions.map(r=>r.subs), backgroundColor:[RED,REDDIM,GOLD,'#6b6b6b'], borderColor:'#141414', borderWidth:2}]},
+  options:{plugins:{legend:{position:'bottom',labels:{boxWidth:10}}}}
+});
+</script>
+</body>
+</html>
